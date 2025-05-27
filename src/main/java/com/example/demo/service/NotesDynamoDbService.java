@@ -1,12 +1,14 @@
-package com.example.demo;
+package com.example.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.example.demo.exception.ProductException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
@@ -20,19 +22,19 @@ import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.example.demo.domain.api.Note;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@Service
-public class NotesService {
+@Profile("dynamo-db")
+@Service()
+public class NotesDynamoDbService implements NotesService {
 
-	Logger logger = LoggerFactory.getLogger(NotesService.class);
-
+	Logger logger = LoggerFactory.getLogger(NotesDynamoDbService.class);
 
 	@Autowired
 	DynamoDB dynamoDB;
 	
 	@Autowired
-	ObjectMapper om;
+	ObjectMapper objectMapper;
 	
-	public List<Note> getNote(String id) {
+	public Note getNote(String id) {
 		Table table = dynamoDB.getTable("Notes");
 
 		Map<String, Object> valueMap = new ValueMap();
@@ -41,17 +43,15 @@ public class NotesService {
 		ItemCollection<QueryOutcome> items = table.query(new QuerySpec()
 				.withKeyConditionExpression("id = :id")
 				.withValueMap(valueMap));
-		
-		List<Note> notes = new ArrayList<>();
-		
+
 		for (Item item : items) {
 			Note note = getObjectFromJson(item.toJSON(), Note.class);
-			notes.add(note);
+			return note;
 		}
-		return notes;
+		throw new ProductException("Not note found");
 	}
 
-	public List<Note> getNoteByTitle(String title) {
+	public List<Note> getNotesByTitle(String title) {
 		Table table = dynamoDB.getTable("Notes");
 
 		Map<String, Object> valueMap = new ValueMap();
@@ -93,7 +93,7 @@ public class NotesService {
 	private <T> T getObjectFromJson(String json, Class<T> clazz) {
 		
 		try {
-			return om.readValue(json, clazz);
+			return objectMapper.readValue(json, clazz);
 		} catch (Exception ex) {
 			logger.error("Error reading json", ex);
 			return null;

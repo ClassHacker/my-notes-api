@@ -1,9 +1,11 @@
-//package com.example.demo.repository;
-//
-//import org.springframework.data.jpa.repository.JpaRepository;
-//
-//import com.example.demo.domain.api.Note;
-//
-//public interface NotesRepository extends JpaRepository<Note, String> {
-//
-//}
+package com.example.demo.repository;
+
+import com.example.demo.domain.api.Note;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import java.util.List;
+
+public interface NotesRepository extends MongoRepository<Note, String> {
+    // Custom query methods (if needed)
+    List<Note> findByTitle(String title);
+}

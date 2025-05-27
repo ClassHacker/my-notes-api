@@ -1,7 +1,8 @@
-package com.example.demo.dynamo.factory;
+package com.example.demo.db.factory;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -13,8 +14,9 @@ import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 
+@Qualifier("dynamoDBClientFactory")
 @Component
-public class DynamoDBClientFactoryImp implements DynamoDBClientFactory {
+public class DynamoDBClientFactoryImp implements ClientFactory {
 
 	@Override
 	public AmazonDynamoDB getDynamoDBClient() {
