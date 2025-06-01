@@ -16,20 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.api.Note;
 
-@RestController()
+@RestController("/notes")
 public class NotesController {
 	
 	Logger logger = LoggerFactory.getLogger(NotesController.class);
 
 	// Use the appropriate service based on the active profile
-	@Autowired
 	private NotesService notesService;
 
-//    public NotesController(NotesService notesService) {
-//        this.notesService = notesService;
-//    }
+    public NotesController(NotesService notesService) {
+        this.notesService = notesService;
+    }
 
-    @GetMapping("/notes/id/{id}")
+    @GetMapping("/id/{id}")
 	public ResponseEntity<Note> getNoteById(@PathVariable String id) {
 		logger.info("GET endpoint is called to get note having id: {}", id);
 		Note note = notesService.getNote(id);
@@ -37,7 +36,7 @@ public class NotesController {
 		return new ResponseEntity<>(note, HttpStatus.OK);
 	}
 	
-	@GetMapping("/notes/titles/{title}")
+	@GetMapping("/titles/{title}")
 	public ResponseEntity<List<Note>> getNotesByTitle(@PathVariable String title) {
 		logger.info("GET endpoint is called to get all notes having title: {}", title);
 		List<Note> notes = notesService.getNotesByTitle(title);
@@ -46,7 +45,7 @@ public class NotesController {
 	}
 
 	
-	@PostMapping("/notes/add")
+	@PostMapping("/add")
 	public ResponseEntity<Note> addNote(@RequestBody Note note) {
 		logger.info("POST endpoint is called to add note");
 		logger.info("Request Body: {}", note);
