@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Profile("mongo-db")
-@Service()
+@Service
 public class NotesMongoDbService implements NotesService {
 
     private NotesRepository mongoRepository;

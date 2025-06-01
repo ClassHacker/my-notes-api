@@ -23,7 +23,7 @@ import com.example.demo.domain.api.Note;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Profile("dynamo-db")
-@Service()
+@Service
 public class NotesDynamoDbService implements NotesService {
 
 	Logger logger = LoggerFactory.getLogger(NotesDynamoDbService.class);
