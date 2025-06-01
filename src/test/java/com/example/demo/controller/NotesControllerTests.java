@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.example.demo.domain.api.Note;
-import com.example.demo.service.NotesDynamoDbService;
+import com.example.demo.service.NotesService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class NotesControllerTests {
 
     @Mock
-    private NotesDynamoDbService notesDynamoDbService;
+    private NotesService notesService;
 
     @InjectMocks
     private NotesController notesController;
@@ -41,32 +41,32 @@ public class NotesControllerTests {
 
     @Test
     public void testGetNoteById() {
-        when(notesDynamoDbService.getNote("1")).thenReturn(note);
+        when(notesService.getNote("1")).thenReturn(note);
 
         Note result = notesController.getNoteById("1").getBody();
 
         assertEquals(note, result);
-        verify(notesDynamoDbService).getNote("1");
+        verify(notesService).getNote("1");
     }
 
     @Test
     public void testGetNotesByTitle() {
-        when(notesDynamoDbService.getNotesByTitle("Test Title")).thenReturn(notes);
+        when(notesService.getNotesByTitle("Test Title")).thenReturn(notes);
 
         List<Note> result = notesController.getNotesByTitle("Test Title").getBody();
 
         assertEquals(notes, result);
-        verify(notesDynamoDbService).getNotesByTitle("Test Title");
+        verify(notesService).getNotesByTitle("Test Title");
     }
 
     @Test
     public void testAddNote() {
-        when(notesDynamoDbService.addNote(note)).thenReturn(note);
+        when(notesService.addNote(note)).thenReturn(note);
 
         Note result = notesController.addNote(note).getBody();
 
         assertEquals(note, result);
-        verify(notesDynamoDbService).addNote(note);
+        verify(notesService).addNote(note);
     }
 
     @Test
